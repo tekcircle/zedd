@@ -876,6 +876,499 @@
                 max-height: 100vh;
             }
         }
+
+        /* Other Services Carousel */
+        .other-services-carousel {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            padding: 4px;
+            margin: 0 -16px;
+            padding: 4px 16px;
+        }
+
+        .other-services-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .service-card {
+            min-width: 200px;
+            max-width: 200px;
+            background: var(--bg-white);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            scroll-snap-align: start;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .service-card-image {
+            position: relative;
+            width: 100%;
+            height: 140px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .service-image-placeholder {
+            font-size: 56px;
+            opacity: 0.8;
+        }
+
+        .service-card-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
+        }
+
+        .service-card-badge.new {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .service-card-content {
+            padding: 12px;
+        }
+
+        .service-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .service-card-rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .stars {
+            font-size: 12px;
+            line-height: 1;
+        }
+
+        .rating-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .service-card-price {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+
+        .price-from {
+            font-size: 11px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .price-amount {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* Service Variants */
+        .variants-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .variant-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: var(--bg-gray);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .variant-card:hover {
+            background: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .variant-card:active {
+            transform: translateY(0);
+        }
+
+        .variant-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 10px;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .variant-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .variant-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            line-height: 1.2;
+        }
+
+        .variant-price {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .variant-arrow {
+            font-size: 16px;
+            color: var(--text-light);
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .variant-card:hover .variant-arrow {
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        /* Bottom Sheet Modal */
+        .bottom-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .bottom-sheet-overlay.active {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .bottom-sheet {
+            background: white;
+            border-radius: 24px 24px 0 0;
+            max-width: 500px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .bottom-sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 12px auto 8px;
+        }
+
+        .bottom-sheet-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px 20px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .modal-header-text {
+            flex: 1;
+        }
+
+        .modal-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .modal-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-gray);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .modal-close:hover {
+            background: var(--border);
+            transform: scale(1.1);
+        }
+
+        .bottom-sheet-content {
+            padding: 20px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        }
+
+        .action-btn.secondary {
+            background: white;
+            color: var(--secondary);
+            border: 2px solid var(--secondary);
+        }
+
+        .action-btn.secondary:hover {
+            background: #eff6ff;
+        }
+
+        /* Modal Sections */
+        .modal-section {
+            margin-bottom: 24px;
+        }
+
+        .modal-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .modal-description {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+
+        .modal-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .modal-list li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+
+        .modal-list li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        /* Pricing Details */
+        .pricing-details {
+            background: var(--bg-gray);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .price-item:not(:last-child) {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .price-value {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Issue Tags */
+        .issue-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .issue-tag {
+            padding: 8px 12px;
+            background: var(--bg-gray);
+            border-radius: 20px;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        /* Duration Info */
+        .duration-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: var(--bg-gray);
+            border-radius: 12px;
+        }
+
+        .duration-icon {
+            font-size: 24px;
+        }
+
+        .duration-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Provider Note */
+        .provider-note {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 12px;
+            margin-top: 24px;
+        }
+
+        .note-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .note-content {
+            flex: 1;
+        }
+
+        .note-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .note-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -1025,6 +1518,75 @@
                 <span>💬</span>
                 <span>Get Instant Quote</span>
             </button>
+        </div>
+
+        <!-- Service Variants -->
+        <div class="section">
+            <div class="section-title">
+                <span class="emoji">🎯</span>
+                <span>Service Specializations</span>
+            </div>
+            <div class="variants-grid">
+                <!-- Variant 1 -->
+                <div class="variant-card">
+                    <div class="variant-icon">🌡️</div>
+                    <div class="variant-info">
+                        <div class="variant-name">AC Gas Refill</div>
+                        <div class="variant-price">₦8k - ₦12k</div>
+                    </div>
+                    <div class="variant-arrow">→</div>
+                </div>
+
+                <!-- Variant 2 -->
+                <div class="variant-card">
+                    <div class="variant-icon">⚙️</div>
+                    <div class="variant-info">
+                        <div class="variant-name">Compressor Repair</div>
+                        <div class="variant-price">₦15k - ₦30k</div>
+                    </div>
+                    <div class="variant-arrow">→</div>
+                </div>
+
+                <!-- Variant 3 -->
+                <div class="variant-card">
+                    <div class="variant-icon">⚡</div>
+                    <div class="variant-info">
+                        <div class="variant-name">AC Electrical Fault</div>
+                        <div class="variant-price">₦10k - ₦20k</div>
+                    </div>
+                    <div class="variant-arrow">→</div>
+                </div>
+
+                <!-- Variant 4 -->
+                <div class="variant-card">
+                    <div class="variant-icon">🔍</div>
+                    <div class="variant-info">
+                        <div class="variant-name">Leak Detection</div>
+                        <div class="variant-price">₦5k - ₦8k</div>
+                    </div>
+                    <div class="variant-arrow">→</div>
+                </div>
+
+                <!-- Variant 5 -->
+                <div class="variant-card">
+                    <div class="variant-icon">🔧</div>
+                    <div class="variant-info">
+                        <div class="variant-name">Condenser Repair</div>
+                        <div class="variant-price">₦12k - ₦25k</div>
+                    </div>
+                    <div class="variant-arrow">→</div>
+                </div>
+
+                <!-- Variant 6 -->
+                <div class="variant-card">
+                    <div class="variant-icon">🧪</div>
+                    <div class="variant-info">
+                        <div class="variant-name">Full System Flush</div>
+                        <div class="variant-price">₦20k - ₦35k</div>
+                    </div>
+                    <div class="variant-arrow">→</div>
+                </div>
+            </div>
         </div>
 
         <!-- Quick Questions -->
@@ -1236,6 +1798,107 @@
             </div>
         </div>
 
+        <!-- Other Services -->
+        <div class="section">
+            <div class="section-title">
+                <span class="emoji">🔧</span>
+                <span>Other Services by Odera Autos</span>
+            </div>
+            <div class="other-services-carousel">
+                <!-- Service Card 1 -->
+                <div class="service-card">
+                    <div class="service-card-image">
+                        <div class="service-image-placeholder">⚙️</div>
+                        <div class="service-card-badge">Popular</div>
+                    </div>
+                    <div class="service-card-content">
+                        <div class="service-card-title">Engine Repair</div>
+                        <div class="service-card-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">4.8 (12)</span>
+                        </div>
+                        <div class="service-card-price">
+                            <span class="price-from">From</span>
+                            <span class="price-amount">₦25,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="service-card">
+                    <div class="service-card-image">
+                        <div class="service-image-placeholder">🔩</div>
+                    </div>
+                    <div class="service-card-content">
+                        <div class="service-card-title">Brake System Repair</div>
+                        <div class="service-card-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">5.0 (8)</span>
+                        </div>
+                        <div class="service-card-price">
+                            <span class="price-from">From</span>
+                            <span class="price-amount">₦15,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="service-card">
+                    <div class="service-card-image">
+                        <div class="service-image-placeholder">🛠️</div>
+                        <div class="service-card-badge new">New</div>
+                    </div>
+                    <div class="service-card-content">
+                        <div class="service-card-title">Oil Change & Service</div>
+                        <div class="service-card-rating">
+                            <span class="stars">⭐⭐⭐⭐</span>
+                            <span class="rating-text">4.5 (6)</span>
+                        </div>
+                        <div class="service-card-price">
+                            <span class="price-from">From</span>
+                            <span class="price-amount">₦8,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Card 4 -->
+                <div class="service-card">
+                    <div class="service-card-image">
+                        <div class="service-image-placeholder">🔧</div>
+                    </div>
+                    <div class="service-card-content">
+                        <div class="service-card-title">Suspension Repair</div>
+                        <div class="service-card-rating">
+                            <span class="stars">⭐⭐⭐⭐⭐</span>
+                            <span class="rating-text">4.9 (10)</span>
+                        </div>
+                        <div class="service-card-price">
+                            <span class="price-from">From</span>
+                            <span class="price-amount">₦20,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Card 5 -->
+                <div class="service-card">
+                    <div class="service-card-image">
+                        <div class="service-image-placeholder">⚡</div>
+                    </div>
+                    <div class="service-card-content">
+                        <div class="service-card-title">Electrical Diagnostics</div>
+                        <div class="service-card-rating">
+                            <span class="stars">⭐⭐⭐⭐</span>
+                            <span class="rating-text">4.7 (9)</span>
+                        </div>
+                        <div class="service-card-price">
+                            <span class="price-from">From</span>
+                            <span class="price-amount">₦12,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div style="height: 100px;"></div>
     </div>
 
@@ -1258,6 +1921,98 @@
                 <span class="btn-price">₦10k - ₦30k</span>
             </div>
         </button>
+    </div>
+</div>
+
+<!-- Bottom Sheet Modal for Variant Details -->
+<div class="bottom-sheet-overlay" id="variantModal">
+    <div class="bottom-sheet">
+        <div class="bottom-sheet-handle"></div>
+        
+        <div class="bottom-sheet-header">
+            <div class="modal-icon" id="modalIcon">🌡️</div>
+            <div class="modal-header-text">
+                <h3 class="modal-title" id="modalTitle">AC Gas Refill</h3>
+                <div class="modal-price" id="modalPrice">₦8,000 - ₦12,000</div>
+            </div>
+            <button class="modal-close" id="closeModal">✕</button>
+        </div>
+
+        <div class="bottom-sheet-content">
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="action-btn primary" id="requestThisService">
+                    <span>🚀</span>
+                    <span>Request This Service</span>
+                </button>
+                <button class="action-btn secondary" id="chatAboutThis">
+                    <span>💬</span>
+                    <span>Ask Questions</span>
+                </button>
+            </div>
+
+            <!-- Service Description -->
+            <div class="modal-section">
+                <div class="modal-section-title">What's Included</div>
+                <div class="modal-description" id="modalDescription">
+                    <ul class="modal-list">
+                        <li>Complete AC gas refill service</li>
+                        <li>Leak detection and pressure test</li>
+                        <li>System performance check</li>
+                        <li>Gas type verification (R134a/R12)</li>
+                        <li>Post-refill cooling test</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Pricing Breakdown -->
+            <div class="modal-section">
+                <div class="modal-section-title">Pricing Details</div>
+                <div class="pricing-details">
+                    <div class="price-item">
+                        <span>Basic refill (R134a)</span>
+                        <span class="price-value">₦8,000</span>
+                    </div>
+                    <div class="price-item">
+                        <span>With leak detection</span>
+                        <span class="price-value">₦10,000</span>
+                    </div>
+                    <div class="price-item">
+                        <span>Premium gas (R12)</span>
+                        <span class="price-value">₦12,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Common Issues -->
+            <div class="modal-section">
+                <div class="modal-section-title">This Solves</div>
+                <div class="issue-tags">
+                    <span class="issue-tag">❄️ Weak cooling</span>
+                    <span class="issue-tag">🔥 Warm air blowing</span>
+                    <span class="issue-tag">💨 Low airflow pressure</span>
+                    <span class="issue-tag">⏱️ AC takes long to cool</span>
+                </div>
+            </div>
+
+            <!-- Estimated Time -->
+            <div class="modal-section">
+                <div class="modal-section-title">Service Duration</div>
+                <div class="duration-info">
+                    <span class="duration-icon">⏱️</span>
+                    <span class="duration-text">30 - 45 minutes typically</span>
+                </div>
+            </div>
+
+            <!-- Provider Note -->
+            <div class="provider-note">
+                <div class="note-avatar">OC</div>
+                <div class="note-content">
+                    <div class="note-name">Note from Odera</div>
+                    <div class="note-text">"I check for leaks before refilling to ensure the gas doesn't escape. If leaks are found, I'll let you know before proceeding."</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -1307,7 +2062,79 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.section').forEach(section => {
     observer.observe(section);
 });
+
+// Service card clicks
+document.querySelectorAll('.service-card').forEach(card => {
+    card.addEventListener('click', () => {
+        const title = card.querySelector('.service-card-title').textContent;
+        alert(`Opening: "${title}"\nThis would navigate to that service's details page.`);
+    });
+});
+
+// Variant card clicks
+document.querySelectorAll('.variant-card').forEach(card => {
+    card.addEventListener('click', () => {
+        const name = card.querySelector('.variant-name').textContent;
+        const price = card.querySelector('.variant-price').textContent;
+        const icon = card.querySelector('.variant-icon').textContent;
+        
+        // Show modal with variant details
+        showVariantModal(icon, name, price);
+    });
+});
+
+// Modal functionality
+const modal = document.getElementById('variantModal');
+const closeModalBtn = document.getElementById('closeModal');
+
+function showVariantModal(icon, name, price) {
+    // Update modal content
+    document.getElementById('modalIcon').textContent = icon;
+    document.getElementById('modalTitle').textContent = name;
+    document.getElementById('modalPrice').textContent = price;
+    
+    // Show modal
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function hideVariantModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Close modal button
+closeModalBtn.addEventListener('click', hideVariantModal);
+
+// Close on overlay click
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        hideVariantModal();
+    }
+});
+
+// Close on escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+        hideVariantModal();
+    }
+});
+
+// Request this service button
+document.getElementById('requestThisService').addEventListener('click', () => {
+    const serviceName = document.getElementById('modalTitle').textContent;
+    alert(`Opening request form for: "${serviceName}"\nThis would open the booking flow with this service pre-selected.`);
+    hideVariantModal();
+});
+
+// Chat about this button
+document.getElementById('chatAboutThis').addEventListener('click', () => {
+    const serviceName = document.getElementById('modalTitle').textContent;
+    alert(`Opening chat with message: "Hi, I'd like to know more about ${serviceName}"\nThis would open the chat interface.`);
+    hideVariantModal();
+});
 </script>
 
 </body>
 </html>
+
