@@ -124,6 +124,102 @@
 
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
+  /* ── Image upload ── */
+  .upload-zone {
+    border: 2px dashed rgba(255,255,255,0.2);
+    border-radius: 14px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .upload-zone:hover { border-color: var(--accent); background: rgba(0,200,150,0.05); }
+  .upload-zone.has-image { padding: 0; border-style: solid; border-color: var(--accent); }
+  .upload-zone input[type="file"] {
+    position: absolute; inset: 0;
+    opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  }
+  .upload-icon { font-size: 28px; margin-bottom: 8px; }
+  .upload-label { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.4; }
+  .upload-label strong { color: var(--accent); }
+  .upload-preview {
+    width: 100%; height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+  }
+  .upload-remove {
+    position: absolute; top: 8px; right: 8px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+    border: none; color: white;
+    font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 2;
+  }
+
+  /* ── Need card image thumbnail ── */
+  .need-image-thumb {
+    width: 100%; height: 140px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  /* ── Provider card image ── */
+  .pnc-image {
+    width: 100%; height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 14px;
+    display: block;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .pnc-image:hover { opacity: 0.92; }
+
+  /* ── Lightbox ── */
+  .lightbox {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 300;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 92vw; max-height: 85vh;
+    border-radius: 16px;
+    object-fit: contain;
+    animation: zoomIn 0.2s ease;
+  }
+  @keyframes zoomIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 20px;
+    width: 40px; height: 40px;
+    background: rgba(255,255,255,0.12);
+    border: none; border-radius: 50%;
+    color: white; font-size: 20px;
+    cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .img-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.7);
+    font-size: 11px; font-weight: 600;
+    padding: 3px 9px; border-radius: 999px;
+    margin-left: 6px; vertical-align: middle;
+  }
+
   .time-chips { display: flex; gap: 8px; flex-wrap: wrap; }
   .time-chip {
     padding: 8px 16px;
@@ -688,29 +784,14 @@
     white-space: nowrap;
   }
   .toast.show { transform: translateX(-50%) translateY(0); }
-
-  .back-link {
-    display: block;
-    padding: 12px 16px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--muted);
-    text-decoration: none;
-    max-width: 480px;
-    margin: 0 auto;
-    transition: color 0.15s;
-  }
-  .back-link:hover { color: var(--black); }
 </style>
 </head>
 <body>
 
-<a href="index.html" class="back-link">← Back to POCs</a>
-
 <!-- View toggle -->
 <div class="view-toggle">
-  <button class="toggle-btn active" onclick="switchView('client', event)">👤 Client</button>
-  <button class="toggle-btn" onclick="switchView('provider', event)">🔧 Provider</button>
+  <button class="toggle-btn active" onclick="switchView('client')">👤 Client</button>
+  <button class="toggle-btn" onclick="switchView('provider')">🔧 Provider</button>
 </div>
 
 <!-- ════════════════════════════════════
@@ -738,6 +819,19 @@
     <div class="form-group">
       <label class="form-label">Describe your request</label>
       <textarea class="form-textarea" placeholder="My kitchen sink is leaking and needs repair..."></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Add a photo <span style="color:rgba(255,255,255,0.3);font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+      <div class="upload-zone" id="upload-zone" onclick="triggerUpload()">
+        <input type="file" id="image-input" accept="image/*" onchange="handleImageUpload(event)">
+        <div id="upload-placeholder">
+          <div class="upload-icon">📷</div>
+          <div class="upload-label">Tap to add a photo of the issue<br><strong>Help providers understand faster</strong></div>
+        </div>
+        <img id="upload-preview" class="upload-preview" style="display:none" alt="Preview">
+        <button class="upload-remove" id="upload-remove" style="display:none" onclick="removeImage(event)">×</button>
+      </div>
     </div>
 
     <div class="form-row">
@@ -793,6 +887,7 @@
       <div class="category-pill">🔧 Plumbing</div>
       <div class="status-pill active">Active</div>
     </div>
+    <img id="client-card-img" class="need-image-thumb" style="display:none" alt="Issue photo">
     <div class="need-description">My kitchen sink is leaking and needs urgent repair. Preferably someone who can come today.</div>
     <div class="need-meta">
       <div class="meta-item">
@@ -886,13 +981,14 @@
     <div class="pnc-top">
       <div class="pnc-category">
         <div class="cat-icon cat-plumbing">🔧</div>
-        Plumbing
+        Plumbing <span class="img-badge">📷 photo</span>
       </div>
       <div class="pnc-time">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         15 min ago
       </div>
     </div>
+    <img id="provider-card-img" class="pnc-image" src="https://images.unsplash.com/photo-1585704032915-c3400305e979?w=600&q=80" alt="Leaking sink" onclick="openLightbox(this.src)">
     <div class="pnc-description">My kitchen sink is leaking and needs urgent repair. Water is pooling under the cabinet. Preferably a plumber who can come today.</div>
     <div class="pnc-details">
       <div class="detail-chip">
@@ -1058,17 +1154,24 @@
   </div>
 </div>
 
+<!-- ════ Lightbox ════ -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <img id="lightbox-img" src="" alt="Full size">
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
   let activeOfferBtn = null;
+  let uploadedImageDataUrl = null;
 
-  function switchView(view, evt) {
+  function switchView(view) {
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(view + '-view').classList.add('active');
-    if (evt && evt.target) evt.target.classList.add('active');
+    event.target.classList.add('active');
   }
 
   function selectChip(el) {
@@ -1081,7 +1184,61 @@
     el.classList.add('active');
   }
 
+  function triggerUpload() {
+    // only trigger if clicking on placeholder, not remove btn
+  }
+
+  function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      uploadedImageDataUrl = ev.target.result;
+      const zone = document.getElementById('upload-zone');
+      const placeholder = document.getElementById('upload-placeholder');
+      const preview = document.getElementById('upload-preview');
+      const removeBtn = document.getElementById('upload-remove');
+
+      preview.src = uploadedImageDataUrl;
+      preview.style.display = 'block';
+      placeholder.style.display = 'none';
+      removeBtn.style.display = 'flex';
+      zone.classList.add('has-image');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeImage(e) {
+    e.stopPropagation();
+    uploadedImageDataUrl = null;
+    const zone = document.getElementById('upload-zone');
+    const placeholder = document.getElementById('upload-placeholder');
+    const preview = document.getElementById('upload-preview');
+    const removeBtn = document.getElementById('upload-remove');
+    const input = document.getElementById('image-input');
+
+    preview.src = '';
+    preview.style.display = 'none';
+    placeholder.style.display = 'block';
+    removeBtn.style.display = 'none';
+    zone.classList.remove('has-image');
+    input.value = '';
+  }
+
   function postNeed() {
+    // Mirror uploaded image to client card + provider card
+    if (uploadedImageDataUrl) {
+      const clientImg = document.getElementById('client-card-img');
+      clientImg.src = uploadedImageDataUrl;
+      clientImg.style.display = 'block';
+
+      const providerImg = document.getElementById('provider-card-img');
+      providerImg.src = uploadedImageDataUrl;
+
+      // add photo badge to provider card title
+      const badge = document.querySelector('#provider-view .provider-need-card .img-badge');
+      if (badge) badge.style.display = 'inline-flex';
+    }
     showToast('✅ Request posted! Providers will be notified.');
   }
 
@@ -1121,6 +1278,15 @@
       activeOfferBtn.innerHTML = '✓ Offer Sent';
     }
     showToast('📨 Offer sent successfully!');
+  }
+
+  function openLightbox(src) {
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
   }
 
   function showToast(msg) {
