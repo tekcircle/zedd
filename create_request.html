@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Circle24 — Needs Feed</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0A0A0A;
+    --white: #FFFFFF;
+    --cream: #F7F5F0;
+    --accent: #00C896;
+    --accent-dim: #00C89620;
+    --red: #FF4757;
+    --red-dim: #FF475720;
+    --yellow: #FFB300;
+    --yellow-dim: #FFB30020;
+    --border: #E8E4DC;
+    --muted: #9B9589;
+    --card: #FFFFFF;
+    --radius: 20px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    color: var(--black);
+  }
+
+  /* ── View toggle ── */
+  .view-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 20px 16px 0;
+  }
+  .toggle-btn {
+    padding: 10px 28px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    border: 2px solid var(--black);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .toggle-btn:first-child { border-radius: 999px 0 0 999px; }
+  .toggle-btn:last-child  { border-radius: 0 999px 999px 0; border-left: none; }
+  .toggle-btn.active { background: var(--black); color: var(--white); }
+
+  /* ── Views ── */
+  .view { display: none; padding: 24px 16px 40px; max-width: 480px; margin: 0 auto; }
+  .view.active { display: block; }
+
+  /* ── Section heading ── */
+  .section-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: var(--black);
+  }
+  .section-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  /* ── CLIENT: Post Need Form ── */
+  .post-need-card {
+    background: var(--black);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 28px;
+    color: var(--white);
+  }
+  .post-need-card .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .post-need-card .card-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+  }
+
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.07);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input::placeholder, .form-textarea::placeholder { color: rgba(255,255,255,0.3); }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: var(--accent);
+  }
+  .form-select { appearance: none; cursor: pointer; }
+  .form-select option { background: #1a1a1a; }
+  .form-textarea { resize: none; min-height: 90px; line-height: 1.5; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .time-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .time-chip {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1.5px solid rgba(255,255,255,0.15);
+    background: transparent;
+    color: rgba(255,255,255,0.6);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .time-chip.active {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 8px;
+  }
+  .toggle-row span { font-size: 14px; color: rgba(255,255,255,0.7); }
+  .switch {
+    width: 44px; height: 26px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 999px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .switch.on { background: var(--accent); }
+  .switch::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    background: white;
+    border-radius: 50%;
+    top: 3px; left: 3px;
+    transition: left 0.2s;
+  }
+  .switch.on::after { left: 21px; }
+
+  .post-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    border: none;
+    background: var(--accent);
+    color: var(--black);
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 20px;
+    letter-spacing: 0.3px;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .post-btn:hover { opacity: 0.9; }
+
+  /* ── CLIENT: My Needs list ── */
+  .my-needs-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: var(--black);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .badge {
+    background: var(--black);
+    color: var(--white);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+
+  .need-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    border: 1.5px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .need-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--accent);
+    border-radius: 4px 0 0 4px;
+  }
+  .need-card.expired::before { background: var(--muted); }
+
+  .need-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .category-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--accent-dim);
+    color: var(--accent);
+  }
+  .status-pill {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .status-pill.active   { background: var(--accent-dim); color: var(--accent); }
+  .status-pill.fulfilled { background: var(--yellow-dim); color: var(--yellow); }
+  .status-pill.expired  { background: #f0f0f0; color: var(--muted); }
+
+  .need-description {
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  .need-meta {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .meta-item svg { flex-shrink: 0; }
+
+  .need-footer {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .offers-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--black);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .view-offers-btn {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--black);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .view-offers-btn:hover { background: var(--black); color: var(--white); }
+
+  /* ── Offers modal ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 100;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 28px 28px 0 0;
+    width: 100%;
+    max-width: 480px;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 28px;
+    animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+  }
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: #e0e0e0;
+    border-radius: 999px;
+    margin: 0 auto 20px;
+  }
+  .modal-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+  .offer-item {
+    padding: 16px;
+    border-radius: 16px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 12px;
+  }
+  .offer-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .provider-avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+    color: white; font-weight: 700;
+  }
+  .provider-info { flex: 1; }
+  .provider-name { font-weight: 700; font-size: 14px; }
+  .provider-rating {
+    font-size: 12px; color: var(--muted);
+    display: flex; align-items: center; gap: 3px;
+  }
+  .offer-price {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    color: var(--accent);
+  }
+  .offer-message {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+  .offer-actions { display: flex; gap: 8px; }
+  .accept-btn {
+    flex: 1; padding: 10px;
+    border-radius: 10px; border: none;
+    background: var(--black); color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700; font-size: 13px;
+    cursor: pointer; transition: opacity 0.15s;
+  }
+  .accept-btn:hover { opacity: 0.8; }
+  .decline-btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer; color: var(--muted);
+  }
+  .close-modal {
+    width: 100%; padding: 14px;
+    border-radius: 14px; border: 1.5px solid var(--border);
+    background: transparent;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 14px;
+    cursor: pointer; margin-top: 8px;
+    color: var(--muted);
+  }
+
+  /* ── PROVIDER: Feed ── */
+  .feed-header {
+    background: var(--black);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .feed-header-left {}
+  .feed-greeting {
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .feed-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--white);
+  }
+  .live-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .live-dot {
+    width: 7px; height: 7px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    margin-bottom: 20px;
+    scrollbar-width: none;
+  }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-chip {
+    padding: 8px 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    color: var(--muted);
+  }
+  .filter-chip.active {
+    border-color: var(--black);
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .provider-need-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 14px;
+    border: 1.5px solid var(--border);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .provider-need-card:hover {
+    border-color: var(--black);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  .pnc-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .pnc-category {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--black);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cat-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .cat-plumbing { background: #E3F2FD; }
+  .cat-electric { background: #FFF9C4; }
+  .cat-cleaning { background: #E8F5E9; }
+  .cat-carpentry { background: #FBE9E7; }
+
+  .pnc-time {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .pnc-description {
+    font-size: 14px;
+    color: #444;
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+
+  .pnc-details {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .detail-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 8px;
+    background: var(--cream);
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+  }
+
+  .pnc-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+  }
+  .client-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .client-avatar-sm {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: white; font-weight: 700;
+  }
+  .client-name-sm { font-size: 13px; font-weight: 600; color: var(--black); }
+
+  .send-offer-btn {
+    padding: 10px 20px;
+    border-radius: 999px;
+    border: none;
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .send-offer-btn:hover { opacity: 0.8; }
+  .send-offer-btn.sent {
+    background: var(--accent-dim);
+    color: var(--accent);
+    cursor: default;
+  }
+
+  /* ── Send offer modal ── */
+  .offer-modal-form {}
+  .offer-form-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .offer-form-input, .offer-form-textarea {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border);
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--black);
+    outline: none;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .offer-form-input:focus, .offer-form-textarea:focus {
+    border-color: var(--black);
+    background: var(--white);
+  }
+  .offer-form-textarea { resize: none; min-height: 100px; line-height: 1.5; }
+  .submit-offer-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    border: none;
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 15px;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .submit-offer-btn:hover { opacity: 0.85; }
+
+  /* ── Empty state ── */
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--muted);
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: var(--black); margin-bottom: 6px; }
+  .empty-sub { font-size: 14px; }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .need-card, .provider-need-card {
+    animation: fadeUp 0.3s ease both;
+  }
+  .need-card:nth-child(1), .provider-need-card:nth-child(1) { animation-delay: 0.05s; }
+  .need-card:nth-child(2), .provider-need-card:nth-child(2) { animation-delay: 0.10s; }
+  .need-card:nth-child(3), .provider-need-card:nth-child(3) { animation-delay: 0.15s; }
+  .need-card:nth-child(4), .provider-need-card:nth-child(4) { animation-delay: 0.20s; }
+
+  /* success toast */
+  .toast {
+    position: fixed;
+    bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--black);
+    color: var(--white);
+    padding: 14px 24px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 200;
+    transition: transform 0.3s ease;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  .back-link {
+    display: block;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    text-decoration: none;
+    max-width: 480px;
+    margin: 0 auto;
+    transition: color 0.15s;
+  }
+  .back-link:hover { color: var(--black); }
+</style>
+</head>
+<body>
+
+<a href="index.html" class="back-link">← Back to POCs</a>
+
+<!-- View toggle -->
+<div class="view-toggle">
+  <button class="toggle-btn active" onclick="switchView('client', event)">👤 Client</button>
+  <button class="toggle-btn" onclick="switchView('provider', event)">🔧 Provider</button>
+</div>
+
+<!-- ════════════════════════════════════
+     CLIENT VIEW
+     ════════════════════════════════════ -->
+<div class="view active" id="client-view">
+
+  <!-- Post a need -->
+  <div class="post-need-card">
+    <div class="card-title">Describe what you need</div>
+    <div class="card-sub">Let providers reach out to you</div>
+
+    <div class="form-group">
+      <label class="form-label">What service do you need?</label>
+      <select class="form-select">
+        <option>🔧 Plumbing</option>
+        <option>⚡ Electrical</option>
+        <option>🧹 Cleaning</option>
+        <option>🪵 Carpentry</option>
+        <option>🎨 Painting</option>
+        <option>❄️ AC Repair</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Describe your request</label>
+      <textarea class="form-textarea" placeholder="My kitchen sink is leaking and needs repair..."></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Location</label>
+        <input class="form-input" type="text" placeholder="Lekki Phase 1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Budget (₦)</label>
+        <input class="form-input" type="number" placeholder="10,000">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Preferred time</label>
+      <div class="time-chips">
+        <button class="time-chip active" onclick="selectChip(this)">Today</button>
+        <button class="time-chip" onclick="selectChip(this)">Tomorrow</button>
+        <button class="time-chip" onclick="selectChip(this)">Flexible</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Post duration</label>
+      <select class="form-select">
+        <option>12 hours</option>
+        <option selected>2 days</option>
+        <option>5 days</option>
+        <option>7 days</option>
+      </select>
+    </div>
+
+    <div class="toggle-row">
+      <span>Allow providers to contact me</span>
+      <div class="switch on" onclick="this.classList.toggle('on')"></div>
+    </div>
+
+    <button class="post-btn" onclick="postNeed()">
+      Post Request
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+  </div>
+
+  <!-- My active needs -->
+  <div class="my-needs-heading">
+    My Requests
+    <span class="badge">2 active</span>
+  </div>
+
+  <!-- Need 1 -->
+  <div class="need-card">
+    <div class="need-card-top">
+      <div class="category-pill">🔧 Plumbing</div>
+      <div class="status-pill active">Active</div>
+    </div>
+    <div class="need-description">My kitchen sink is leaking and needs urgent repair. Preferably someone who can come today.</div>
+    <div class="need-meta">
+      <div class="meta-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Lekki Phase 1
+      </div>
+      <div class="meta-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Today
+      </div>
+      <div class="meta-item">💰 ₦10,000</div>
+      <div class="meta-item">Expires in 1d 14h</div>
+    </div>
+    <div class="need-footer">
+      <div class="offers-count">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        3 offers received
+      </div>
+      <button class="view-offers-btn" onclick="openOffersModal()">View Offers</button>
+    </div>
+  </div>
+
+  <!-- Need 2 -->
+  <div class="need-card">
+    <div class="need-card-top">
+      <div class="category-pill">⚡ Electrical</div>
+      <div class="status-pill active">Active</div>
+    </div>
+    <div class="need-description">Need an electrician to fix faulty wiring in my living room. Flexible on timing.</div>
+    <div class="need-meta">
+      <div class="meta-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Victoria Island
+      </div>
+      <div class="meta-item">🕐 Flexible</div>
+      <div class="meta-item">💰 ₦15,000</div>
+      <div class="meta-item">Expires in 2d 6h</div>
+    </div>
+    <div class="need-footer">
+      <div class="offers-count">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        1 offer received
+      </div>
+      <button class="view-offers-btn" onclick="openOffersModal()">View Offers</button>
+    </div>
+  </div>
+
+  <!-- Need 3 - fulfilled -->
+  <div class="need-card expired">
+    <div class="need-card-top">
+      <div class="category-pill" style="background:#f0f0f0;color:#999">🧹 Cleaning</div>
+      <div class="status-pill fulfilled">Fulfilled</div>
+    </div>
+    <div class="need-description">Deep cleaning needed for 3-bedroom apartment before moving in.</div>
+    <div class="need-meta">
+      <div class="meta-item">Ikeja GRA</div>
+      <div class="meta-item">💰 ₦20,000</div>
+      <div class="meta-item" style="color:#aaa">Closed 2 days ago</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════════════════════════════════
+     PROVIDER VIEW
+     ════════════════════════════════════ -->
+<div class="view" id="provider-view">
+
+  <div class="feed-header">
+    <div class="feed-header-left">
+      <div class="feed-greeting">Requests Near You</div>
+      <div class="feed-title">Needs Feed</div>
+    </div>
+    <div class="live-badge">
+      <div class="live-dot"></div>
+      Live
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-row">
+    <button class="filter-chip active" onclick="selectFilter(this)">All</button>
+    <button class="filter-chip" onclick="selectFilter(this)">Plumbing</button>
+    <button class="filter-chip" onclick="selectFilter(this)">Electrical</button>
+    <button class="filter-chip" onclick="selectFilter(this)">Cleaning</button>
+    <button class="filter-chip" onclick="selectFilter(this)">Carpentry</button>
+  </div>
+
+  <!-- Need card 1 -->
+  <div class="provider-need-card">
+    <div class="pnc-top">
+      <div class="pnc-category">
+        <div class="cat-icon cat-plumbing">🔧</div>
+        Plumbing
+      </div>
+      <div class="pnc-time">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        15 min ago
+      </div>
+    </div>
+    <div class="pnc-description">My kitchen sink is leaking and needs urgent repair. Water is pooling under the cabinet. Preferably a plumber who can come today.</div>
+    <div class="pnc-details">
+      <div class="detail-chip">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Lekki Phase 1
+      </div>
+      <div class="detail-chip">💰 Budget: ₦10,000</div>
+      <div class="detail-chip">🕐 Today</div>
+      <div class="detail-chip" style="background:#e8f5e9;color:#2e7d32">3 offers sent</div>
+    </div>
+    <div class="pnc-footer">
+      <div class="client-info">
+        <div class="client-avatar-sm">A</div>
+        <div class="client-name-sm">Adaeze O.</div>
+      </div>
+      <button class="send-offer-btn" onclick="openSendOffer(this)">
+        Send Offer
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Need card 2 -->
+  <div class="provider-need-card">
+    <div class="pnc-top">
+      <div class="pnc-category">
+        <div class="cat-icon cat-plumbing">🔧</div>
+        Plumbing
+      </div>
+      <div class="pnc-time">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        1 hr ago
+      </div>
+    </div>
+    <div class="pnc-description">Bathroom toilet keeps running and needs to be fixed. Also a tap that won't shut off completely.</div>
+    <div class="pnc-details">
+      <div class="detail-chip">📍 Surulere</div>
+      <div class="detail-chip">💰 Budget: ₦6,000</div>
+      <div class="detail-chip">🕐 Tomorrow</div>
+      <div class="detail-chip" style="background:#fff3e0;color:#e65100">1 offer sent</div>
+    </div>
+    <div class="pnc-footer">
+      <div class="client-info">
+        <div class="client-avatar-sm" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">K</div>
+        <div class="client-name-sm">Kunle B.</div>
+      </div>
+      <button class="send-offer-btn sent" disabled>
+        ✓ Offer Sent
+      </button>
+    </div>
+  </div>
+
+  <!-- Need card 3 -->
+  <div class="provider-need-card">
+    <div class="pnc-top">
+      <div class="pnc-category">
+        <div class="cat-icon cat-plumbing">🔧</div>
+        Plumbing
+      </div>
+      <div class="pnc-time">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        3 hrs ago
+      </div>
+    </div>
+    <div class="pnc-description">New borehole installation needed for a 4-bedroom duplex. Need a quote and timeline.</div>
+    <div class="pnc-details">
+      <div class="detail-chip">📍 Ajah</div>
+      <div class="detail-chip">💰 Budget: ₦150,000</div>
+      <div class="detail-chip">🕐 Flexible</div>
+      <div class="detail-chip" style="background:#e8f5e9;color:#2e7d32">0 offers yet</div>
+    </div>
+    <div class="pnc-footer">
+      <div class="client-info">
+        <div class="client-avatar-sm" style="background:linear-gradient(135deg,#fa709a,#fee140)">N</div>
+        <div class="client-name-sm">Ngozi E.</div>
+      </div>
+      <button class="send-offer-btn" onclick="openSendOffer(this)">
+        Send Offer
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ════ Offers Modal (Client) ════ -->
+<div class="modal-overlay" id="offers-modal" onclick="closeOnOverlay(event, 'offers-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Offers Received (3)</div>
+
+    <div class="offer-item">
+      <div class="offer-top">
+        <div class="provider-avatar">T</div>
+        <div class="provider-info">
+          <div class="provider-name">Taiwo Plumbing</div>
+          <div class="provider-rating">⭐ 4.8 · 120 reviews</div>
+        </div>
+        <div class="offer-price">₦8,000</div>
+      </div>
+      <div class="offer-message">"I can fix this today within 2 hours. I have all the tools needed. Very experienced with kitchen sink repairs."</div>
+      <div class="offer-actions">
+        <button class="accept-btn" onclick="acceptOffer(this)">Accept Offer</button>
+        <button class="decline-btn">Decline</button>
+      </div>
+    </div>
+
+    <div class="offer-item">
+      <div class="offer-top">
+        <div class="provider-avatar" style="background:linear-gradient(135deg,#43e97b,#38f9d7)">E</div>
+        <div class="provider-info">
+          <div class="provider-name">Emeka Works</div>
+          <div class="provider-rating">⭐ 4.5 · 89 reviews</div>
+        </div>
+        <div class="offer-price">₦9,500</div>
+      </div>
+      <div class="offer-message">"Available now. I'll bring my own materials. Can also check for any other plumbing issues while I'm there."</div>
+      <div class="offer-actions">
+        <button class="accept-btn" onclick="acceptOffer(this)">Accept Offer</button>
+        <button class="decline-btn">Decline</button>
+      </div>
+    </div>
+
+    <div class="offer-item">
+      <div class="offer-top">
+        <div class="provider-avatar" style="background:linear-gradient(135deg,#fa709a,#fee140)">B</div>
+        <div class="provider-info">
+          <div class="provider-name">Bello Fix-It</div>
+          <div class="provider-rating">⭐ 4.2 · 54 reviews</div>
+        </div>
+        <div class="offer-price">₦7,000</div>
+      </div>
+      <div class="offer-message">"Best price in the area. I can come tomorrow morning if today doesn't work."</div>
+      <div class="offer-actions">
+        <button class="accept-btn" onclick="acceptOffer(this)">Accept Offer</button>
+        <button class="decline-btn">Decline</button>
+      </div>
+    </div>
+
+    <button class="close-modal" onclick="closeModal('offers-modal')">Close</button>
+  </div>
+</div>
+
+
+<!-- ════ Send Offer Modal (Provider) ════ -->
+<div class="modal-overlay" id="send-offer-modal" onclick="closeOnOverlay(event, 'send-offer-modal')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Send Your Offer</div>
+
+    <div class="offer-modal-form">
+      <label class="offer-form-label">Your price (₦)</label>
+      <input class="offer-form-input" type="number" placeholder="e.g. 8000">
+
+      <label class="offer-form-label">Your message</label>
+      <textarea class="offer-form-textarea" placeholder="Describe what you'll do, when you're available, and why they should choose you..."></textarea>
+
+      <button class="submit-offer-btn" onclick="submitOffer()">Send Offer →</button>
+    </div>
+
+    <button class="close-modal" onclick="closeModal('send-offer-modal')">Cancel</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  let activeOfferBtn = null;
+
+  function switchView(view, evt) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(view + '-view').classList.add('active');
+    if (evt && evt.target) evt.target.classList.add('active');
+  }
+
+  function selectChip(el) {
+    el.closest('.time-chips').querySelectorAll('.time-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function selectFilter(el) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function postNeed() {
+    showToast('✅ Request posted! Providers will be notified.');
+  }
+
+  function openOffersModal() {
+    document.getElementById('offers-modal').classList.add('open');
+  }
+
+  function openSendOffer(btn) {
+    activeOfferBtn = btn;
+    document.getElementById('send-offer-modal').classList.add('open');
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+
+  function closeOnOverlay(e, id) {
+    if (e.target === e.currentTarget) closeModal(id);
+  }
+
+  function acceptOffer(btn) {
+    const item = btn.closest('.offer-item');
+    item.style.background = '#f0fdf4';
+    item.style.borderColor = '#86efac';
+    btn.textContent = '✓ Accepted';
+    btn.style.background = '#16a34a';
+    btn.disabled = true;
+    closeModal('offers-modal');
+    showToast('🎉 Offer accepted! Provider has been notified.');
+  }
+
+  function submitOffer() {
+    closeModal('send-offer-modal');
+    if (activeOfferBtn) {
+      activeOfferBtn.classList.add('sent');
+      activeOfferBtn.disabled = true;
+      activeOfferBtn.innerHTML = '✓ Offer Sent';
+    }
+    showToast('📨 Offer sent successfully!');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+</script>
+</body>
+</html>
